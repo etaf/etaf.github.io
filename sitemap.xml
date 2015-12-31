@@ -2,8 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.etaf.me/about/index.html</loc>
+    <lastmod>2015-12-31T08:23:56.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://blog.etaf.me/Vim/latest-vim-with-youcompleteme/</loc>
-    <lastmod>2015-12-31T06:31:42.000Z</lastmod>
+    <lastmod>2015-12-31T07:52:00.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://blog.etaf.me/Algorithm/find-max-interval/</loc>
+    <lastmod>2015-12-31T07:50:55.000Z</lastmod>
   </url>
   
   <url>
@@ -24,11 +34,6 @@
   <url>
     <loc>http://blog.etaf.me/Project/qnds-my-dig/</loc>
     <lastmod>2015-12-31T06:29:47.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://blog.etaf.me/Algorithm/find-max-interval/</loc>
-    <lastmod>2015-12-31T06:27:52.000Z</lastmod>
   </url>
   
   <url>
@@ -77,12 +82,12 @@
   </url>
   
   <url>
-    <loc>http://blog.etaf.me/System-Maintenance/centos7-find-boot-for-windows/</loc>
+    <loc>http://blog.etaf.me/uncategorized/md5sum-check-in-dos/</loc>
     <lastmod>2015-12-30T14:53:56.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://blog.etaf.me/uncategorized/md5sum-check-in-dos/</loc>
+    <loc>http://blog.etaf.me/System-Maintenance/centos7-find-boot-for-windows/</loc>
     <lastmod>2015-12-30T14:53:56.000Z</lastmod>
   </url>
   

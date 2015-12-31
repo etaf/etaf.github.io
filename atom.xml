@@ -231,9 +231,8 @@
     <link href="http://blog.etaf.me/Vim/latest-vim-with-youcompleteme/"/>
     <id>http://blog.etaf.me/Vim/latest-vim-with-youcompleteme/</id>
     <published>2015-07-22T00:29:31.000Z</published>
-    <updated>2015-12-31T06:31:42.000Z</updated>
-    <content type="html"><![CDATA[<p>###Compile latest vim</p>
-<ul>
+    <updated>2015-12-31T07:52:00.000Z</updated>
+    <content type="html"><![CDATA[<h3 id="Compile_latest_vim"><a href="#Compile_latest_vim" class="headerlink" title="Compile latest vim"></a>Compile latest vim</h3><ul>
 <li><p>First install xclip and clang.</p>
 </li>
 <li><p>Then get the source code:</p>
@@ -246,12 +245,11 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure -with-features=huge --enable-rubyinterp=yes --enable-pythoninterp=yes --enable-perlinterp=yes  --enable-luainterp=yes  --enable-sniff --enable-multibyte --enable-xim --enable-fontset --enable-gtk2-check --enable-gnome-check --enable-gui=auto --enable-cscope --with-python-config-dir=/usr/lib/python2.<span class="number">7</span>/config --with-x --prefix=/usr &gt; configure_output.txt</span><br><span class="line">make -j <span class="number">8</span></span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
 <hr>
-<p>###Compile Youcompleteme<br><strong>Do not use vundle to install it</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/Valloric/YouCompleteMe.git</span><br><span class="line">git submodule update --init --recursive</span><br><span class="line">./install.sh --clang-completer --system-libclang               <span class="comment"># ( _on centos_ )</span></span><br><span class="line">./install.sh --clang-completer                                 <span class="comment"># ( _on ubuntu_ )</span></span><br><span class="line">cp third_party/ycmd/cpp ./ -rf</span><br></pre></td></tr></table></figure></p>
+<h3 id="Compile_Youcompleteme"><a href="#Compile_Youcompleteme" class="headerlink" title="Compile Youcompleteme"></a>Compile Youcompleteme</h3><p><strong>Do not use vundle to install it</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/Valloric/YouCompleteMe.git</span><br><span class="line">git submodule update --init --recursive</span><br><span class="line">./install.sh --clang-completer --system-libclang               <span class="comment"># ( _on centos_ )</span></span><br><span class="line">./install.sh --clang-completer                                 <span class="comment"># ( _on ubuntu_ )</span></span><br><span class="line">cp third_party/ycmd/cpp ./ -rf</span><br></pre></td></tr></table></figure></p>
 <p><strong>now test !</strong></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>###Compile latest vim</p>
-<ul>
+    <![CDATA[<h3 id="Compile_latest_vim"><a href="#Compile_latest_vim" class="headerlink" title="Compile latest vim"></a>Compile latest vim</h3><ul>
 <li><p>First install xclip and clang.</p>
 </li>
 <li><p>Then get the source code:</p>
@@ -396,11 +394,10 @@ authorization information should corresponding with the specific domain name, if
     <link href="http://blog.etaf.me/Algorithm/find-max-interval/"/>
     <id>http://blog.etaf.me/Algorithm/find-max-interval/</id>
     <published>2015-05-17T02:58:49.000Z</published>
-    <updated>2015-12-31T06:27:52.000Z</updated>
-    <content type="html"><![CDATA[<p>###Problem:</p>
-<hr>
+    <updated>2015-12-31T07:50:55.000Z</updated>
+    <content type="html"><![CDATA[<h3 id="Problem_3A"><a href="#Problem_3A" class="headerlink" title="Problem:"></a>Problem:</h3><hr>
 <p>Given an array a, you need to find maximum j - i that a[i] &lt; a[j].</p>
-<p>###Solutions:<br><strong>Time: O(n) | Space: O(n)</strong></p>
+<h3 id="Solutions_3A"><a href="#Solutions_3A" class="headerlink" title="Solutions:"></a>Solutions:</h3><p><strong>Time: O(n) | Space: O(n)</strong></p>
 <p>I’ve tried using two pointer to solve this problem, but find it not optimal.</p>
 <p>We call the front pointer l, and the tail pointer r.</p>
 <p>For every r, we need to check [0,l] to find the first element that smaller than a[r].</p>
@@ -411,10 +408,9 @@ authorization information should corresponding with the specific domain name, if
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find_max_interval</span><span class="params">(<span class="keyword">const</span> <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; a)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = a.size();</span><br><span class="line">    <span class="keyword">int</span> interval = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> p[n];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;n; ++i)&#123;<span class="comment">// p[i] means the minimum element in pre i elements.</span></span><br><span class="line">        p[i] = (i==<span class="number">0</span> || a[i] &lt; p[i-<span class="number">1</span>]) ? a[i] : p[i-<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j=n-<span class="number">1</span>; j&gt;interval; --j)&#123;</span><br><span class="line">        <span class="keyword">while</span>(j&gt;interval &amp;&amp; a[j] &gt;= p[j-interval-<span class="number">1</span>])</span><br><span class="line">            ++interval;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> interval;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>###Problem:</p>
-<hr>
+    <![CDATA[<h3 id="Problem_3A"><a href="#Problem_3A" class="headerlink" title="Problem:"></a>Problem:</h3><hr>
 <p>Given an array a, you need to find maximum j - i that a[i] &lt; a[j].</p>
-<p>###Solutions:<br><strong>Time: O(n) | Space: O(n)</strong></p>
+<h3 id="Solutions_3A"><a href="#Solutions_3A" class="headerlink" title="Solutions:"></a>Solutions:</h3><p><strong>Time: O(n) | Space: O(n)</strong></p>
 <p>I’ve tried using two pointer to solve this problem, but find it not optimal.</p>
 <p>We call the front pointer l, and the tail pointer r.</p>
 <p>For every r, we need to check [0,l] to find the first element that smaller than a[r].</p>
