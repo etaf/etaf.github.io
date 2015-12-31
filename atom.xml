@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[ETAF's Blog]]></title>
+  
+  <link href="/atom.xml" rel="self"/>
+  <link href="http://blog.etaf.me/"/>
+  <updated>2015-12-31T06:30:18.000Z</updated>
+  <id>http://blog.etaf.me/</id>
+  
+  <author>
+    <name><![CDATA[ETAF]]></name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[bash review]]></title>
+    <link href="http://blog.etaf.me/Shell/bash-review/"/>
+    <id>http://blog.etaf.me/Shell/bash-review/</id>
+    <published>2015-09-05T08:40:19.000Z</published>
+    <updated>2015-12-31T06:30:18.000Z</updated>
+    <content type="html"><![CDATA[<p>– A reading note for <a href="http://www.gnu.org/software/bash/manual/bash.html#Shell-Syntax" target="_blank" rel="external">bash doc</a><br><a id="more"></a></p>
+<h3 id="u63A7_u5236_u5B57_u7B26"><a href="#u63A7_u5236_u5B57_u7B26" class="headerlink" title="控制字符"></a>控制字符</h3><ul>
+<li>转义字符： \<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> hello \ world</span><br><span class="line"><span class="built_in">echo</span> hello \\ world</span><br><span class="line"><span class="built_in">echo</span> ‘hello \ world’</span><br><span class="line"><span class="built_in">echo</span> “hello \ world”</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>output<br><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hello  world</span><br><span class="line">hello <span class="string">\</span> world</span><br><span class="line">hello <span class="string">\</span> world</span><br><span class="line">hello <span class="string">\</span> world</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>单引号<br>单引号内的字符都不会被解释，成对单引号内不能出现其他孤立单引号，即使是加了反斜杠也不行.<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> ‘<span class="variable">$hello</span> <span class="variable">$world</span>’</span><br><span class="line"><span class="comment">#this way would not be valid: echo ‘hello \’ world’</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Output<br><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$hello</span> <span class="variable">$world</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>双引号<br>单引号内的字符，除了 $ ‘ \ ! 之外都不会被解释</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">world=<span class="number">123</span> &amp;&amp; <span class="built_in">echo</span> <span class="string">"hello <span class="variable">$world</span>"</span></span><br><span class="line">word=<span class="number">123</span> &amp;&amp; <span class="built_in">echo</span> <span class="string">"hello \$world"</span></span><br><span class="line">word=<span class="number">123</span> &amp;&amp; <span class="built_in">echo</span> <span class="string">"hello ‘<span class="variable">$world</span>’"</span></span><br></pre></td></tr></table></figure>
+<p>Output<br><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hello <span class="number">123</span></span><br><span class="line">hello <span class="variable">$world</span></span><br><span class="line">hello ‘<span class="number">123</span>’</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p>分号<br>用于执行多个命令不用换行</p>
+</li>
+<li><p>大括号{}</p>
+<ul>
+<li><p>{ cmd1; cmd2; cmd3; }  将多个命令聚合，在相同的上下文中执行</p>
+</li>
+<li><p>ln -s /home/etaf/{test.txt,test-ln.txt}  等价于  ln -s /home/etaf/test.txt /home/etaf/test-ln.txt</p>
+</li>
+<li><p>foo=hello &amp;&amp; ${foo}world 连接</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ln /home/etaf/&#123;test.txt,<span class="built_in">test</span>-ln.txt&#125;</span><br><span class="line">ls -il /home/etaf/<span class="built_in">test</span>&#123;.txt,-ln.txt&#125;</span><br><span class="line">foo=hello &amp;&amp; <span class="built_in">echo</span> <span class="variable">$&#123;foo&#125;</span>world</span><br></pre></td></tr></table></figure>
+<p>Output:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">4597095</span> -rw-rw-r--. <span class="number">2</span> etaf etaf <span class="number">0</span> Sep  <span class="number">5</span> <span class="number">19</span>:<span class="number">50</span> /home/etaf/test-ln.txt</span><br><span class="line"><span class="number">4597095</span> -rw-rw-r--. <span class="number">2</span> etaf etaf <span class="number">0</span> Sep  <span class="number">5</span> <span class="number">19</span>:<span class="number">50</span> /home/etaf/test.txt</span><br><span class="line">helloworld</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>中括号 []<br>  [ -e test.txt ]  测试</li>
+<li>双中括号 [[]]  单中括号里， 不能用 &gt; , &lt;  , &amp;&amp; , || ， 但是在 [[]] 里面可以用.</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x=abc</span><br><span class="line">y=acb</span><br><span class="line">[[ -n <span class="string">"<span class="variable">$x</span>"</span> &amp;&amp; -n <span class="string">"<span class="variable">$y</span>"</span> &amp;&amp; <span class="string">"<span class="variable">$x</span>"</span> == <span class="string">"<span class="variable">$y</span>"</span> ]]  &amp;&amp; <span class="built_in">echo</span> <span class="string">"yes"</span> || <span class="built_in">echo</span> <span class="string">"no"</span></span><br><span class="line">[[ <span class="string">"<span class="variable">$x</span>"</span> &lt; <span class="string">"<span class="variable">$y</span>"</span> ]] &amp;&amp; <span class="built_in">echo</span> yes || <span class="built_in">echo</span> no</span><br><span class="line">[[ <span class="string">"<span class="variable">$x</span>"</span> &gt; <span class="string">"<span class="variable">$y</span>"</span> ]] &amp;&amp; <span class="built_in">echo</span> yes || <span class="built_in">echo</span> no</span><br></pre></td></tr></table></figure>
+<p>output<br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">no</span></span><br><span class="line"><span class="literal">yes</span></span><br><span class="line"><span class="literal">no</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>小括号<ul>
+<li>聚合命令，( cmd1; cmd2; cmd3; )  与大括号不同的是，小括号里面的命令会在一个新的subshell里执行，故不会影响当前shell， 而大括号是在原shell里面执行。下面会举个例子。</li>
+<li>数组初始化 例如： arr=(1,10,100,1000)<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x=hello; &#123; x=world; <span class="built_in">echo</span> <span class="variable">$x</span>; &#125;; <span class="built_in">echo</span> <span class="variable">$x</span></span><br><span class="line">x=hello; ( x=world; <span class="built_in">echo</span> <span class="variable">$x</span>; ); <span class="built_in">echo</span> <span class="variable">$x</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<p>output<br><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">world</span></span><br><span class="line">hello</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>双小括号 ((expression))<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (( i=<span class="number">0</span>; i&lt;<span class="number">9</span>; i++ )) ; do echo <span class="variable">$i</span> ; done ;</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> &#123;<span class="number">0</span>..<span class="number">8</span>&#125; ; do echo <span class="variable">$i</span> ; done;</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> `seq <span class="number">0</span> <span class="number">8</span>` ; do echo <span class="variable">$i</span>; done;`</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<h3 id="u6761_u4EF6_u5224_u65AD"><a href="#u6761_u4EF6_u5224_u65AD" class="headerlink" title="条件判断"></a>条件判断</h3><p>有两种形式：</p>
+<ul>
+<li>test -e foo.txt</li>
+<li>[ -e foo.txt ]</li>
+</ul>
+<h4 id="u5B57_u7B26_u4E32_u5224_u65AD_uFF1A"><a href="#u5B57_u7B26_u4E32_u5224_u65AD_uFF1A" class="headerlink" title="字符串判断："></a>字符串判断：</h4><ul>
+<li>是否为空<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">foo=<span class="string">""</span></span><br><span class="line"><span class="comment"># -z : if empyt return true</span></span><br><span class="line">[ -z <span class="string">"<span class="variable">$foo</span>"</span> ] &amp;&amp; <span class="built_in">echo</span> <span class="string">"empty"</span> || <span class="built_in">echo</span> <span class="string">"not empty"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># -n : if not empyty return true</span></span><br><span class="line">[ -n <span class="string">"<span class="variable">$foo</span>"</span> ] &amp;&amp; <span class="built_in">echo</span> <span class="string">"not empty"</span> || <span class="built_in">echo</span> <span class="string">"empty"</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>Output<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="constant">empty</span></span><br><span class="line"><span class="constant">empty</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>是否相等<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x=aaa</span><br><span class="line">y=bbb</span><br><span class="line">[ <span class="string">"<span class="variable">$x</span>"</span> == <span class="string">"<span class="variable">$y</span>"</span> ] &amp;&amp; <span class="built_in">echo</span> <span class="string">"yes"</span> || <span class="built_in">echo</span> <span class="string">"no"</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="u6574_u6570_u6BD4_u8F83"><a href="#u6574_u6570_u6BD4_u8F83" class="headerlink" title="整数比较"></a>整数比较</h4><ul>
+<li>-eq equal</li>
+<li>-ne not equal</li>
+<li>-lt less than</li>
+<li>-le less or equal</li>
+<li>-gt greater than</li>
+<li>-ge greater or equal than</li>
+</ul>
+<h4 id="u6D4B_u8BD5_u6587_u4EF6"><a href="#u6D4B_u8BD5_u6587_u4EF6" class="headerlink" title="测试文件"></a>测试文件</h4><ul>
+<li>-e : is exit?</li>
+<li>-d : is a directory?</li>
+<li>-L : is a link?</li>
+<li>-f : is a normal file?</li>
+<li>-r : can read?</li>
+<li>-w : can write?</li>
+<li>-x : can execute?</li>
+<li>file1 -nt file2 : is file newer than file2</li>
+<li>file1 -ot file2 : is file older than file2</li>
+</ul>
+<h4 id="u5FAA_u73AF_u63A7_u5236"><a href="#u5FAA_u73AF_u63A7_u5236" class="headerlink" title="循环控制"></a>循环控制</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">i=<span class="number">0</span></span><br><span class="line">s=<span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> [ <span class="string">"<span class="variable">$i</span>"</span> -le <span class="number">100</span> ] ;</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        s=$(( <span class="variable">$s</span> + <span class="variable">$i</span> ));</span><br><span class="line">        i=$(( <span class="variable">$i</span> + <span class="number">1</span> ));</span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"sum = <span class="variable">$s</span>"</span></span><br><span class="line"></span><br><span class="line">s=<span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> ((i=<span class="number">0</span>;i&lt;=<span class="number">100</span>;++i))</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        s=$(( <span class="variable">$s</span> + <span class="variable">$i</span> ))</span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"sum = <span class="variable">$s</span>"</span></span><br></pre></td></tr></table></figure>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>– A reading note for <a href="http://www.gnu.org/software/bash/manual/bash.html#Shell-Syntax">bash doc</a><br>]]>
+    
+    </summary>
+    
+      <category term="Shell" scheme="http://blog.etaf.me/categories/Shell/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[C++: redefine overload override]]></title>
+    <link href="http://blog.etaf.me/C/c-plus-plus-redefine-overload-override/"/>
+    <id>http://blog.etaf.me/C/c-plus-plus-redefine-overload-override/</id>
+    <published>2015-09-02T01:55:35.000Z</published>
+    <updated>2015-12-31T05:57:58.000Z</updated>
+    <content type="html"><![CDATA[<p>– C++ Objection: Redefine, Override, Overload.<br><a id="more"></a></p>
+<h3 id="Redefine__28_u91CD_u5B9A_u4E49_29"><a href="#Redefine__28_u91CD_u5B9A_u4E49_29" class="headerlink" title="Redefine (重定义)"></a>Redefine (重定义)</h3><h4 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h4><ul>
+<li>one in base class, one in child class, using pointer which the type is child class</li>
+<li>same function name</li>
+<li>return value is not cared</li>
+<li>if the args is the same： if there are ‘virtual’, it’s polymorphism，pointer with base class will point to child class’s method; Pointer with child class type still using the methon redefine in child class.</li>
+<li>if the args is different： whether virtual， redefine</li>
+</ul>
+<h4 id="Example_3A"><a href="#Example_3A" class="headerlink" title="Example:"></a>Example:</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">class</span> Shape&#123;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">  Shape()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Shape was constructed"</span>&lt;&lt;endl;&#125;</span><br><span class="line">  ~Shape()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Shape was destructed"</span>&lt;&lt;endl;&#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Drawing shape"</span>&lt;&lt;endl;&#125;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">is_drawed</span><span class="params">()</span></span>&#123;</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;<span class="string">"from parent"</span>&lt;&lt;endl;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Rectangle:<span class="keyword">public</span> Shape&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    Rectangle()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Rectangle was constructed"</span>&lt;&lt;endl;&#125;</span><br><span class="line">    ~Rectangle()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Rectangle was destructed"</span>&lt;&lt;endl;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Drawing Rectangle"</span>&lt;&lt;endl;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">draw</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> x*y;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">is_drawed</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">"from child"</span>&lt;&lt;endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"-------------------------------"</span>&lt;&lt;endl;</span><br><span class="line">    Rectangle* q = <span class="keyword">new</span> Rectangle();</span><br><span class="line">    q-&gt;draw();</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;q-&gt;draw(<span class="number">2</span>,<span class="number">3</span>)&lt;&lt;endl;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;q-&gt;is_drawed()&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">delete</span> q;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"-------------------------------"</span>&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Output_3A"><a href="#Output_3A" class="headerlink" title="Output:"></a>Output:</h4><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">-------------------------------</span><br><span class="line">Shape was constructed</span><br><span class="line">Rectangle was constructed</span><br><span class="line">Drawing Rectangle</span><br><span class="line">6</span><br><span class="line">from child</span><br><span class="line">1</span><br><span class="line">Rectangle was destructed</span><br><span class="line">Shape was destructed</span><br><span class="line">-------------------------------</span></span><br></pre></td></tr></table></figure>
+<h3 id="Override__28_u8986_u76D6_2C_u91CD_u5199_uFF0C_u591A_u6001_29"><a href="#Override__28_u8986_u76D6_2C_u91CD_u5199_uFF0C_u591A_u6001_29" class="headerlink" title="Override (覆盖,重写，多态)"></a>Override (覆盖,重写，多态)</h3><h4 id="Requirements-1"><a href="#Requirements-1" class="headerlink" title="Requirements"></a>Requirements</h4><ul>
+<li>one in base class, one in child class, using pointer which the type is child class</li>
+<li>same function name</li>
+<li>same args</li>
+<li>same return value</li>
+<li>‘virtual’ keyword for method in base class</li>
+</ul>
+<h4 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">class</span> Shape&#123;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">  Shape()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Shape was constructed"</span>&lt;&lt;endl;&#125;</span><br><span class="line">  <span class="keyword">virtual</span> ~Shape()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Shape was destructed"</span>&lt;&lt;endl;&#125; <span class="comment">// if not virutal , the child's destructor can not be exec</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Drawing shape"</span>&lt;&lt;endl;&#125;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">is_drawed</span><span class="params">()</span></span>&#123;</span><br><span class="line">      <span class="built_in">cout</span>&lt;&lt;<span class="string">"from parent"</span>&lt;&lt;endl;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Rectangle:<span class="keyword">public</span> Shape&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    Rectangle()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Rectangle was constructed"</span>&lt;&lt;endl;&#125;</span><br><span class="line">    ~Rectangle()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Rectangle was destructed"</span>&lt;&lt;endl;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Drawing Rectangle"</span>&lt;&lt;endl;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">draw</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> x*y;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">is_drawed</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">"from child"</span>&lt;&lt;endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    Shape * p = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"-------------------------------"</span>&lt;&lt;endl;</span><br><span class="line">    p  = <span class="keyword">new</span> Rectangle();</span><br><span class="line">    p-&gt;draw();</span><br><span class="line">    p-&gt;is_drawed();</span><br><span class="line">    <span class="keyword">delete</span> p;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"-------------------------------"</span>&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Output"><a href="#Output" class="headerlink" title="Output"></a>Output</h4><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">-------------------------------</span><br><span class="line">Shape was constructed</span><br><span class="line">Rectangle was constructed</span><br><span class="line">Drawing shape</span><br><span class="line">from child</span><br><span class="line">Rectangle was destructed</span><br><span class="line">Shape was destructed</span><br><span class="line">-------------------------------</span></span><br></pre></td></tr></table></figure>
+<h3 id="Overload__28_u91CD_u8F7D_29"><a href="#Overload__28_u91CD_u8F7D_29" class="headerlink" title="Overload (重载)"></a>Overload (重载)</h3><h4 id="Requirements-2"><a href="#Requirements-2" class="headerlink" title="Requirements"></a>Requirements</h4><ul>
+<li>same function name</li>
+<li>return value is not cared</li>
+<li>args should be different</li>
+<li>overloaded function still existed<h4 id="Example-1"><a href="#Example-1" class="headerlink" title="Example"></a>Example</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">class</span> Shape&#123;</span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">  Shape()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Shape was constructed"</span>&lt;&lt;endl;&#125;</span><br><span class="line">  ~Shape()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Shape was destructed"</span>&lt;&lt;endl;&#125;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Drawing shape"</span>&lt;&lt;endl;&#125;</span><br><span class="line">  <span class="function"><span class="keyword">bool</span> <span class="title">is_drawed</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> <span class="literal">false</span>;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Rectangle:<span class="keyword">public</span> Shape&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    Rectangle()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Rectangle was constructed"</span>&lt;&lt;endl;&#125;</span><br><span class="line">    ~Rectangle()&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Rectangle was destructed"</span>&lt;&lt;endl;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span>&#123;<span class="built_in">cout</span>&lt;&lt;<span class="string">"Drawing Rectangle"</span>&lt;&lt;endl;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">draw</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>&#123; <span class="comment">//success</span></span><br><span class="line">        <span class="keyword">return</span> x*y;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">/*    void draw()&#123; // failed to overload the pre Rectangle::draw() because the overload should have the different args.</span><br><span class="line">        cout&lt;&lt;"New Drawing Rectangle"&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    string draw()&#123; // failed to overload the pre Rectangle::draw() because the overload should have the different args.</span><br><span class="line">        return "New Drawing Rectangle";</span><br><span class="line">    &#125;</span><br><span class="line">*/</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"-------------------------------"</span>&lt;&lt;endl;</span><br><span class="line">    Rectangle* q = <span class="keyword">new</span> Rectangle();</span><br><span class="line">    q-&gt;draw(); <span class="comment">//failed</span></span><br><span class="line">    <span class="comment">//cout&lt;&lt;q-&gt;draw()&lt;&lt;endl;</span></span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;q-&gt;draw(<span class="number">2</span>,<span class="number">3</span>)&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">delete</span> q;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"-------------------------------"</span>&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="Output-1"><a href="#Output-1" class="headerlink" title="Output"></a>Output</h4><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Shape was constructed</span><br><span class="line">Rectangle was constructed</span><br><span class="line">Drawing Rectangle</span><br><span class="line">6</span><br><span class="line">Rectangle was destructed</span><br><span class="line"><span class="header">Shape was destructed</span><br><span class="line">-------------------------------</span></span><br></pre></td></tr></table></figure>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>– C++ Objection: Redefine, Override, Overload.<br>]]>
+    
+    </summary>
+    
+      <category term="C++" scheme="http://blog.etaf.me/categories/C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[a simple implementation of KMP]]></title>
+    <link href="http://blog.etaf.me/uncategorized/a-simple-implement-of-kmp/"/>
+    <id>http://blog.etaf.me/uncategorized/a-simple-implement-of-kmp/</id>
+    <published>2015-08-24T09:16:14.000Z</published>
+    <updated>2015-12-31T03:25:42.000Z</updated>
+    <content type="html"><![CDATA[<a id="more"></a>
+<h3 id="What_u2019s_KMP_3F"><a href="#What_u2019s_KMP_3F" class="headerlink" title="What’s KMP?"></a>What’s KMP?</h3><h3 id="How_KMP_work_3F"><a href="#How_KMP_work_3F" class="headerlink" title="How KMP work?"></a>How KMP work?</h3><h3 id="Why_KMP_works_3F"><a href="#Why_KMP_works_3F" class="headerlink" title="Why KMP works?"></a>Why KMP works?</h3><h3 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h3><p><a href="https://leetcode.com/problems/implement-strstr/" target="_blank" rel="external">Oline judge on leetcode</a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Solution &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">strStr</span><span class="params">(<span class="built_in">string</span> haystack, <span class="built_in">string</span> needle)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = haystack.size();</span><br><span class="line">        <span class="keyword">int</span> m = needle.size();</span><br><span class="line">        <span class="keyword">int</span> next[m];</span><br><span class="line">        get_next(needle.c_str(), m, next);</span><br><span class="line">        <span class="keyword">int</span> i=<span class="number">0</span>, j=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(;i&lt;n &amp;&amp; j&lt;m; ++i, ++j)&#123;</span><br><span class="line">            <span class="keyword">while</span>(j!=-<span class="number">1</span> &amp;&amp; haystack[i] != needle[j]) j = next[j];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(j == m ) <span class="keyword">return</span> i-m;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">get_next</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* pattern, <span class="keyword">int</span> len, <span class="keyword">int</span>* next)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i=-<span class="number">1</span>, j=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(; j&lt;len; ++i,++j)&#123;</span><br><span class="line">            next[j] = i;</span><br><span class="line">            <span class="keyword">while</span>(i!=-<span class="number">1</span> &amp;&amp; pattern[i] != pattern[j] ) i = next[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="Complexity"><a href="#Complexity" class="headerlink" title="Complexity"></a>Complexity</h3>]]></content>
+    <summary type="html">
+    <![CDATA[<a id="more"></a>
+<h3 id="What_u2019s_KMP_3F"><a href="#What_u2019s_KMP_3F" class="headerlink" title="What’s KMP?"></a>What’s KMP?</h3><h3 i]]>
+    </summary>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[singleton in C++]]></title>
+    <link href="http://blog.etaf.me/C/singleton-in-c-plus-plus/"/>
+    <id>http://blog.etaf.me/C/singleton-in-c-plus-plus/</id>
+    <published>2015-08-19T09:58:02.000Z</published>
+    <updated>2015-12-31T03:33:08.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="Three_implements"><a href="#Three_implements" class="headerlink" title="Three implements"></a>Three implements</h2><h3 id="Hungry_Singleton"><a href="#Hungry_Singleton" class="headerlink" title="Hungry Singleton"></a>Hungry Singleton</h3><p>Instantiate at the beginning.</p>
+<p>For every request of instance, return the origin instantiated one.</p>
+<p>It’s thread-safe.</p>
+<a id="more"></a>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* author ETAF</span><br><span class="line"> * hungry singleton: instantiate when define.</span><br><span class="line"> * set the constructor SGT_hungry() as private to insure no one can construct an instance.</span><br><span class="line"> * using static class member so that we get instance by SGT_hungry::Instance()</span><br><span class="line"> * It's thread-safe. */</span></span><br><span class="line"><span class="keyword">class</span> SGT_hungry&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        SGT_hungry()&#123;val = <span class="number">0</span>;&#125;</span><br><span class="line">        <span class="keyword">static</span> SGT_hungry* m_instance;</span><br><span class="line">        <span class="keyword">int</span> val;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">         <span class="function"><span class="keyword">static</span> SGT_hungry* <span class="title">Instance</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> m_instance;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">count</span><span class="params">()</span></span>&#123;++val;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">get_val</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>-&gt;val;&#125;</span><br><span class="line">        ~SGT_hungry()&#123;</span><br><span class="line">            <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"bye"</span>&lt;&lt;<span class="built_in">std</span>::endl;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br><span class="line">SGT_hungry* SGT_hungry::m_instance = <span class="keyword">new</span> SGT_hungry();</span><br></pre></td></tr></table></figure>
+<h3 id="Lazy_Singleton"><a href="#Lazy_Singleton" class="headerlink" title="Lazy Singleton"></a>Lazy Singleton</h3><p>Instantiate when requested.</p>
+<p>I’s non thread-safe because the m_instance would be read at the same time, and creating more than one instance.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* author ETAF</span><br><span class="line"> * lazy singleton: instantiate when needed.</span><br><span class="line"> * set the constructor SGT_hungry() as private to insure no one can construct an instance.</span><br><span class="line"> * using static class member so that we get instance by SGT_hungry::Instance()</span><br><span class="line"> * It's non thread-safe unless add lock.</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">class</span> SGT_lazy&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        SGT_lazy()&#123;val = <span class="number">0</span>;&#125;</span><br><span class="line">        <span class="keyword">static</span> SGT_lazy* m_instance;</span><br><span class="line">        <span class="keyword">int</span> val;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="function"><span class="keyword">static</span> SGT_lazy* <span class="title">Instance</span><span class="params">()</span></span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (m_instance == <span class="literal">NULL</span> )&#123;</span><br><span class="line">                m_instance = <span class="keyword">new</span> SGT_lazy();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> m_instance;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">count</span><span class="params">()</span></span>&#123;++val;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">get_val</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>-&gt;val;&#125;</span><br><span class="line">        ~SGT_lazy()&#123;</span><br><span class="line">            <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"bye"</span>&lt;&lt;<span class="built_in">std</span>::endl;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line">SGT_lazy* SGT_lazy::m_instance = <span class="literal">NULL</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="Meryers_Singleton"><a href="#Meryers_Singleton" class="headerlink" title="Meryers Singleton"></a>Meryers Singleton</h3><p>Using the local static variable to make sure the constructor executed only once.</p>
+<p>It’s thread-safe in C++11 because the local static variable is insured thread-safe.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* author ETAF</span><br><span class="line"> * lazy singleton: instantiate when needed.</span><br><span class="line"> * set the constructor SGT_hungry() as private to insure no one can construct an instance.</span><br><span class="line"> * using static class member so that we get instance by SGT_hungry::Instance()</span><br><span class="line"> * using local static variable to make sure the constructor executed only once.</span><br><span class="line"> * It's thread-safe in C++11 because the local static variable is insured thread-safe.</span><br><span class="line"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> SGT_meyers&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        SGT_meyers()&#123;val = <span class="number">0</span>;&#125;</span><br><span class="line">        <span class="keyword">int</span> val;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="function"><span class="keyword">static</span> SGT_meyers&amp; <span class="title">Instance</span><span class="params">()</span></span>&#123;</span><br><span class="line">            <span class="keyword">static</span> SGT_meyers sgt;  <span class="comment">//* using local static variable to make sure the constructor executed only once.</span></span><br><span class="line">            <span class="keyword">return</span> sgt;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">count</span><span class="params">()</span></span>&#123;++val;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">get_val</span><span class="params">()</span></span>&#123;<span class="keyword">return</span> <span class="keyword">this</span>-&gt;val;&#125;</span><br><span class="line">        ~SGT_meyers()&#123;</span><br><span class="line">            <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"bye"</span>&lt;&lt;<span class="built_in">std</span>::endl; <span class="comment">// not work</span></span><br><span class="line">        &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="The_deconstructor"><a href="#The_deconstructor" class="headerlink" title="The deconstructor"></a>The deconstructor</h2><p>The singleton implement would not invoke any deconstructor.<br>So we need deconstrut manully.</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="Three_implements"><a href="#Three_implements" class="headerlink" title="Three implements"></a>Three implements</h2><h3 id="Hungry_Singleton"><a href="#Hungry_Singleton" class="headerlink" title="Hungry Singleton"></a>Hungry Singleton</h3><p>Instantiate at the beginning.</p>
+<p>For every request of instance, return the origin instantiated one.</p>
+<p>It’s thread-safe.</p>]]>
+    
+    </summary>
+    
+      <category term="C++" scheme="http://blog.etaf.me/categories/C/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[centos certificate not work]]></title>
+    <link href="http://blog.etaf.me/System-Maintenance/centos-certificate-not-work/"/>
+    <id>http://blog.etaf.me/System-Maintenance/centos-certificate-not-work/</id>
+    <published>2015-07-22T00:51:13.000Z</published>
+    <updated>2015-12-31T03:29:33.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>error: Peer’s certificate issuer has been marked as not trusted by the user. while accessing <a href="https://github.com" target="_blank" rel="external">https://github.com</a></p>
+</blockquote>
+<p>Solution:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo rm -rf /etc/pki  /etc/ssl</span><br><span class="line">sudo yum reinstall -y openssl ca-certificates</span><br></pre></td></tr></table></figure></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>error: Peer’s certificate issuer has been marked as not trusted by the user. while accessing <a href="https://github.com" ta]]>
+    </summary>
+    
+      <category term="System-Maintenance" scheme="http://blog.etaf.me/categories/System-Maintenance/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[latest vim with youcompleteme]]></title>
+    <link href="http://blog.etaf.me/Vim/latest-vim-with-youcompleteme/"/>
+    <id>http://blog.etaf.me/Vim/latest-vim-with-youcompleteme/</id>
+    <published>2015-07-22T00:29:31.000Z</published>
+    <updated>2015-12-31T06:31:42.000Z</updated>
+    <content type="html"><![CDATA[<p>###Compile latest vim</p>
+<ul>
+<li><p>First install xclip and clang.</p>
+</li>
+<li><p>Then get the source code:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hg <span class="built_in">clone</span> https://code.google.com/p/vim/ &amp;&amp; <span class="built_in">cd</span> vim</span><br><span class="line">or:</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/vim/vim.git &amp;&amp; <span class="built_in">cd</span> vim</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Compile: </p>
+<p>  <strong>Note: python-config-dir should be set according to real situation.</strong></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure -with-features=huge --enable-rubyinterp=yes --enable-pythoninterp=yes --enable-perlinterp=yes  --enable-luainterp=yes  --enable-sniff --enable-multibyte --enable-xim --enable-fontset --enable-gtk2-check --enable-gnome-check --enable-gui=auto --enable-cscope --with-python-config-dir=/usr/lib/python2.<span class="number">7</span>/config --with-x --prefix=/usr &gt; configure_output.txt</span><br><span class="line">make -j <span class="number">8</span></span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<hr>
+<p>###Compile Youcompleteme<br><strong>Do not use vundle to install it</strong><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/Valloric/YouCompleteMe.git</span><br><span class="line">git submodule update --init --recursive</span><br><span class="line">./install.sh --clang-completer --system-libclang               <span class="comment"># ( _on centos_ )</span></span><br><span class="line">./install.sh --clang-completer                                 <span class="comment"># ( _on ubuntu_ )</span></span><br><span class="line">cp third_party/ycmd/cpp ./ -rf</span><br></pre></td></tr></table></figure></p>
+<p><strong>now test !</strong></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>###Compile latest vim</p>
+<ul>
+<li><p>First install xclip and clang.</p>
+</li>
+<li><p>Then get the source code:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hg <span class="built_in">clone</span> https://code.google.com/p/vim/ &amp;&amp; <span class="built_in">cd</span> vim</span><br><span class="line">or:</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/vim/vim.git &amp;&amp; <span class="built_in">cd</span> vim</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Compile: </p>
+<p>  <strong>Note: python-config-dir should be set according to real situation.</strong></p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure -with-features=huge --enable-rubyinterp=yes --enable-pythoninterp=yes --enable-perlinterp=yes  --enable-luainterp=yes  --enable-sniff --enable-multibyte --enable-xim --enable-fontset --enable-gtk2-check --enable-gnome-check --enable-gui=auto --enable-cscope --with-python-config-dir=/usr/lib/python2.<span class="number">7</span>/config --with-x --prefix=/usr &gt; configure_output.txt</span><br><span class="line">make -j <span class="number">8</span></span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>]]>
+    
+    </summary>
+    
+      <category term="Vim" scheme="http://blog.etaf.me/categories/Vim/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[qnds: my dig]]></title>
+    <link href="http://blog.etaf.me/Project/qnds-my-dig/"/>
+    <id>http://blog.etaf.me/Project/qnds-my-dig/</id>
+    <published>2015-07-21T02:48:58.000Z</published>
+    <updated>2015-12-31T06:29:47.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="QDNS"><a href="#QDNS" class="headerlink" title="QDNS"></a>QDNS</h2><h3 id="Terms_about_QDNS_3A"><a href="#Terms_about_QDNS_3A" class="headerlink" title="Terms about QDNS:"></a>Terms about QDNS:</h3><p>DNS:  Domain Name System</p>
+<p>Dig :   Domain Information Groper</p>
+<p>QDNS : my dig.</p>
+<p>DN : Domain Name<br>CV : cluster View of IP segments.</p>
+<a id="more"></a>
+<hr>
+<p>Typical type of DNS record:</p>
+<ul>
+<li>A (Address record):  Map a domain name to its ip.</li>
+<li>CNAME Canonical name record): Map a domain name to its alias, for example www.baidu.com -&gt; www.a.shifen.com.</li>
+<li>MX (Mail exchange record): Maps a domain name to a list of message transfer agents for that domain.</li>
+<li>NS (Name server record): return domain name of a dns server who will tell you the ip you want.</li>
+<li>SOA (Start of [a zone of] authority record): tell you who have the original record answer you want.<blockquote>
+<p>常见的DNS服务器只能创建一个标准区域，然后可以创建很多个辅助区域。标准区域是可以读写修改的。而辅助区域只能通过标准区域复制来完成，不能在辅助区域中进行修改。而创建标准区域的DNS就会有SOA记录，或者准确说SOA记录中的主机地址一定是这个标准区域的服务器IP地址)</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h3 id="Functionality"><a href="#Functionality" class="headerlink" title="Functionality"></a>Functionality</h3><h4 id="input_3A"><a href="#input_3A" class="headerlink" title="input:"></a>input:</h4><pre><code>Query:
+Q &lt;src_IP&gt; &lt;DN(domain name)&gt;
+Update:
+U &lt;cv_file&gt; &lt;dn_file&gt;
+Exit:
+E
+</code></pre><h4 id="output_3A"><a href="#output_3A" class="headerlink" title="output:"></a>output:</h4><pre><code>For Query: output anwser information and authorization information.
+
+    anwser information should corresponding with specific domain name, for instance: code.google.com.
+    authorization information should corresponding with the specific domain name, if not, return the  authorization information of the latest parent domain name, for instance: code.google.com =&gt; google.com =&gt; com
+
+For Update: update data from offered file.
+    cv_file: map ip segments to CV
+    dc_file: map dn to cv, a dn may have different information in different CV.
+
+For Exit: notify all the thread to exit.
+</code></pre><h4 id="Multiple_thread"><a href="#Multiple_thread" class="headerlink" title="Multiple thread"></a>Multiple thread</h4><ul>
+<li>N thread for query, each one gets queries from one pipe.</li>
+<li>Query thread should still working with old data While updating.</li>
+<li>If there are more than one update job, only update the latest one.</li>
+</ul>
+<hr>
+<h3 id="Thread_Model"><a href="#Thread_Model" class="headerlink" title="Thread Model"></a>Thread Model</h3><p><img src="/images/qdns.png" alt="Thread Model"></p>
+<h3 id="Process_of_Query"><a href="#Process_of_Query" class="headerlink" title="Process of Query"></a>Process of Query</h3><ul>
+<li>The program will find the corresponding CV using the src_ip first.</li>
+<li><p>Find the anwser and authorization information using the domain name.</p>
+<pre><code>anwser information should corresponding with specific domain name, for instance: code.google.com.
+authorization information should corresponding with the specific domain name, if not, return the  authorization information of the latest parent domain name, for instance: code.google.com =&gt; google.com =&gt; com
+</code></pre></li>
+</ul>
+<h4 id="CV_Table_3A"><a href="#CV_Table_3A" class="headerlink" title="CV Table:"></a>CV Table:</h4><p><img src="/images/cv_table.png" alt="CV Table"></p>
+<h4 id="DN_Tree_3A"><a href="#DN_Tree_3A" class="headerlink" title="DN Tree:"></a>DN Tree:</h4><p><img src="/images/dn_tree.png" alt="Dn Tree"></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="QDNS"><a href="#QDNS" class="headerlink" title="QDNS"></a>QDNS</h2><h3 id="Terms_about_QDNS_3A"><a href="#Terms_about_QDNS_3A" class="headerlink" title="Terms about QDNS:"></a>Terms about QDNS:</h3><p>DNS:  Domain Name System</p>
+<p>Dig :   Domain Information Groper</p>
+<p>QDNS : my dig.</p>
+<p>DN : Domain Name<br>CV : cluster View of IP segments.</p>]]>
+    
+    </summary>
+    
+      <category term="Project" scheme="http://blog.etaf.me/categories/Project/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Max subarray sum with one swap]]></title>
+    <link href="http://blog.etaf.me/Algorithm/max-subarray-sum-with-one-swap/"/>
+    <id>http://blog.etaf.me/Algorithm/max-subarray-sum-with-one-swap/</id>
+    <published>2015-05-21T00:02:48.000Z</published>
+    <updated>2015-12-31T06:25:41.000Z</updated>
+    <content type="html"><![CDATA[<h3 id="Problem_3A"><a href="#Problem_3A" class="headerlink" title="Problem:"></a>Problem:</h3><p>Problem description can be found in <a href="https://codility.com/programmers/challenges/aluminium2014" target="_blank" rel="external">condility</a>.</p>
+<p>Given an array, find the maximum sum of sub-array, you can swap two elements at most once.</p>
+<hr>
+<a id="more"></a>
+<h3 id="Solutions_3A"><a href="#Solutions_3A" class="headerlink" title="Solutions:"></a>Solutions:</h3><p><strong>Time: O(n) | Space: O(n)</strong></p>
+<p>The first I think about is enumerate the element which will be swapped.</p>
+<p>Assume the enumerated element’s index is p, and it swap with element indexed by q.</p>
+<p>Here q may be either larger or less than p.</p>
+<p>Again we assume q &lt; p.</p>
+<p>Then after swapped, the maximum sub-array sum containing array[p] should be sum by two part:</p>
+<ul>
+<li><p>part 1: g[p]-array[p]. g[p]: the maximum sub-array sum start with index p.</p>
+</li>
+<li><p>part 2: f[p-1]: the maximum sum of sum of a sub-array and a individual element out of the sub-array.</p>
+<p>  Like this:<strong> | …..||| </strong></p>
+<p>  The indivisual <strong>|</strong> means the element left outside of the sub-array.</p>
+<p>  The <strong>|||</strong> means sub-array end with array[p-1].</p>
+<p>  Note that this part can be empty, but the previous part must not.</p>
+<p>  And f[p-1] is the sum of the two part.</p>
+<p>  it’s obvious that the indiviual <strong>|</strong> is used to swap with array[p], which means array[q].</p>
+<p>  And after swapped, <strong> | …..|||    —&gt;    …..|||| </strong>, that is the left part of sub-array containing array[p].</p>
+<p>  So the problem is how to find the maximum f[p-1].</p>
+<p>  It’s obvious, f[0] = array[0];</p>
+<p>  In index i, f[i] may be f[i-1] + array[i], which like this: <strong> |….|||| </strong> or <strong>….||||</strong></p>
+<p>  Or f[i] may be max(array[0….i]), which like this: <strong> ….|…. </strong> or <strong> ……| </strong>.</p>
+<p>  So f[i] = max( f[i-1]+array[i], max(array[0…i]));</p>
+</li>
+</ul>
+<p>The answer is <strong> max( max(g[0,…n-1]) , max(f[p-1] + g[p]-array[p]) </strong> .</p>
+<p>The <strong>max(g[0…n-1])</strong> means the max sub-array sum without swap.</p>
+<p>And in situations p &lt; q, we just reverse the array, and find the answer with the above steps again.</p>
+<hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">single_run</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;A)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// write your code in C++11</span></span><br><span class="line">    <span class="keyword">int</span> n = A.size();</span><br><span class="line">    <span class="keyword">int</span> f[n],g[n];</span><br><span class="line">    f[<span class="number">0</span>] = A[<span class="number">0</span>];</span><br><span class="line">    g[n-<span class="number">1</span>] = A[n-<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">int</span> ans = g[n-<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">int</span> maxn = A[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;n; ++i)&#123;</span><br><span class="line">        maxn = max(A[i],maxn);</span><br><span class="line">        f[i] = max(f[i-<span class="number">1</span>]+A[i], maxn);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=n-<span class="number">2</span>; i&gt;=<span class="number">0</span>; --i)&#123;</span><br><span class="line">        g[i] = A[i] + (g[i+<span class="number">1</span>] &gt; <span class="number">0</span> ? g[i+<span class="number">1</span>] : <span class="number">0</span>);</span><br><span class="line">        ans = max(ans,g[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;n; ++i)&#123;</span><br><span class="line">        ans = max(ans, f[i-<span class="number">1</span>]+g[i]-A[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">solution</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;A)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ans = single_run(A);</span><br><span class="line">    reverse(A.begin(),A.end());</span><br><span class="line">    <span class="keyword">return</span> max(ans, single_run(A));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h3 id="Problem_3A"><a href="#Problem_3A" class="headerlink" title="Problem:"></a>Problem:</h3><p>Problem description can be found in <a href="https://codility.com/programmers/challenges/aluminium2014">condility</a>.</p>
+<p>Given an array, find the maximum sum of sub-array, you can swap two elements at most once.</p>
+<hr>]]>
+    
+    </summary>
+    
+      <category term="O(n)" scheme="http://blog.etaf.me/tags/O-n/"/>
+    
+      <category term="Algorithm" scheme="http://blog.etaf.me/categories/Algorithm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Find max interval]]></title>
+    <link href="http://blog.etaf.me/Algorithm/find-max-interval/"/>
+    <id>http://blog.etaf.me/Algorithm/find-max-interval/</id>
+    <published>2015-05-17T02:58:49.000Z</published>
+    <updated>2015-12-31T06:27:52.000Z</updated>
+    <content type="html"><![CDATA[<p>###Problem:</p>
+<hr>
+<p>Given an array a, you need to find maximum j - i that a[i] &lt; a[j].</p>
+<p>###Solutions:<br><strong>Time: O(n) | Space: O(n)</strong></p>
+<p>I’ve tried using two pointer to solve this problem, but find it not optimal.</p>
+<p>We call the front pointer l, and the tail pointer r.</p>
+<p>For every r, we need to check [0,l] to find the first element that smaller than a[r].</p>
+<p>Although we need not check som r that r &lt; current_r.</p>
+<p>The worst situation is O(n^2).</p>
+<p>Since the answer is easy to check for a given r:<br>if there exist a i at [0,r-interval-1] that a[i] &lt; a[r], than the answer must be not less then interval.<br>So we could enumerate every interval from 0.</p>
+<a id="more"></a>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find_max_interval</span><span class="params">(<span class="keyword">const</span> <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; a)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = a.size();</span><br><span class="line">    <span class="keyword">int</span> interval = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> p[n];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;n; ++i)&#123;<span class="comment">// p[i] means the minimum element in pre i elements.</span></span><br><span class="line">        p[i] = (i==<span class="number">0</span> || a[i] &lt; p[i-<span class="number">1</span>]) ? a[i] : p[i-<span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j=n-<span class="number">1</span>; j&gt;interval; --j)&#123;</span><br><span class="line">        <span class="keyword">while</span>(j&gt;interval &amp;&amp; a[j] &gt;= p[j-interval-<span class="number">1</span>])</span><br><span class="line">            ++interval;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> interval;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>###Problem:</p>
+<hr>
+<p>Given an array a, you need to find maximum j - i that a[i] &lt; a[j].</p>
+<p>###Solutions:<br><strong>Time: O(n) | Space: O(n)</strong></p>
+<p>I’ve tried using two pointer to solve this problem, but find it not optimal.</p>
+<p>We call the front pointer l, and the tail pointer r.</p>
+<p>For every r, we need to check [0,l] to find the first element that smaller than a[r].</p>
+<p>Although we need not check som r that r &lt; current_r.</p>
+<p>The worst situation is O(n^2).</p>
+<p>Since the answer is easy to check for a given r:<br>if there exist a i at [0,r-interval-1] that a[i] &lt; a[r], than the answer must be not less then interval.<br>So we could enumerate every interval from 0.</p>]]>
+    
+    </summary>
+    
+      <category term="leetcode" scheme="http://blog.etaf.me/tags/leetcode/"/>
+    
+      <category term="Algorithm" scheme="http://blog.etaf.me/categories/Algorithm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Container With Most Water]]></title>
+    <link href="http://blog.etaf.me/Algorithm/container-with-most-water/"/>
+    <id>http://blog.etaf.me/Algorithm/container-with-most-water/</id>
+    <published>2015-05-17T02:41:06.000Z</published>
+    <updated>2015-12-31T06:25:07.000Z</updated>
+    <content type="html"><![CDATA[<h3 id="Problem_3A"><a href="#Problem_3A" class="headerlink" title="Problem:"></a>Problem:</h3><p>The problem is detailed at <a href="https://leetcode.com/problems/trapping-rain-water/" target="_blank" rel="external">leetcode</a>.</p>
+<hr>
+<a id="more"></a>
+<h3 id="Solutions_3A"><a href="#Solutions_3A" class="headerlink" title="Solutions:"></a>Solutions:</h3><p><strong>Time: O(n) |  Space: O(n)</strong><br>This problem is interesting using two pointer respectively start from font and tail.</p>
+<p>Let’s call the front pointer l, and the other r.</p>
+<p>When height[l] &lt; height[r], the potential better answer must be new_l &gt; l.</p>
+<p>And when height[l] &gt; height[r], the potential better answer must be new_r &lt; r.</p>
+<p>And if height[l] == height[r], the potential better answer must be new l &gt; l, and new_r &lt; r.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Solution &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">maxArea</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;height)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> l = <span class="number">0</span>, r = height.size()-<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> ans=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(l&lt;r)&#123;</span><br><span class="line">            <span class="keyword">if</span>(height[l]&gt;=height[r])&#123;</span><br><span class="line">                ans = max( (r-l)*height[r],ans);</span><br><span class="line">                --r;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                ans = max( (r-l)*height[l],ans);</span><br><span class="line">                ++l;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h3 id="Problem_3A"><a href="#Problem_3A" class="headerlink" title="Problem:"></a>Problem:</h3><p>The problem is detailed at <a href="https://leetcode.com/problems/trapping-rain-water/">leetcode</a>.</p>
+<hr>]]>
+    
+    </summary>
+    
+      <category term="leetcode" scheme="http://blog.etaf.me/tags/leetcode/"/>
+    
+      <category term="Algorithm" scheme="http://blog.etaf.me/categories/Algorithm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Trapping Rain Water]]></title>
+    <link href="http://blog.etaf.me/Algorithm/trapping-rain-water/"/>
+    <id>http://blog.etaf.me/Algorithm/trapping-rain-water/</id>
+    <published>2015-05-15T12:42:52.000Z</published>
+    <updated>2015-12-31T06:26:43.000Z</updated>
+    <content type="html"><![CDATA[<h3 id="Problem_3A"><a href="#Problem_3A" class="headerlink" title="Problem:"></a>Problem:</h3><p>The problem is detailed at <a href="https://leetcode.com/problems/trapping-rain-water/" target="_blank" rel="external">leetcode</a>.</p>
+<p><img src="http://www.leetcode.com/wp-content/uploads/2012/08/rainwatertrap.png" alt="example_img"></p>
+<hr>
+<h3 id="Solutions_3A"><a href="#Solutions_3A" class="headerlink" title="Solutions:"></a>Solutions:</h3><p><strong>Time: O(n) |  Space: O(n)</strong></p>
+<p>The maximum volumn of water a slot can contain depends on the left border and the right border.<br>So we just need know the highest left border and right border of a slot, then we know how much water it can contain.<br><a id="more"></a></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Solution_two_boarder &#123; <span class="comment">//O(n)</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">trap</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; height)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>, n = height.size();</span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> l[n],r[n];</span><br><span class="line">        l[<span class="number">0</span>] = height[<span class="number">0</span>];</span><br><span class="line">        r[n-<span class="number">1</span>] = height[n-<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;n; ++i) l[i] = max(l[i-<span class="number">1</span>], height[i]);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=n-<span class="number">2</span>; i&gt;=<span class="number">0</span>; --i) r[i] = max(r[i+<span class="number">1</span>], height[i]);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;n; ++i)&#123;</span><br><span class="line">            ans += min(l[i],r[i]) - height[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><strong>Time: O(n) |  Space: O(n)</strong></p>
+<p>The other idea is maintaining a monotonically decreasing stack.<br>The elements of the stack is the indexes of slots.<br>The stack has a property: any elements are the indexes of real border of slots.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Solution_stack &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">trap</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; height)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>, n = height.size();</span><br><span class="line">        <span class="keyword">int</span> st[n], top=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> sum[n+<span class="number">1</span>];</span><br><span class="line">        sum[<span class="number">0</span>]=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;++i)</span><br><span class="line">            sum[i]=sum[i-<span class="number">1</span>] + height[i-<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;n; ++i)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!top) st[top++] = i;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">while</span>(top &amp;&amp; height[st[top-<span class="number">1</span>]] &lt; height[i]) --top;</span><br><span class="line">                <span class="keyword">if</span>(!top)&#123;</span><br><span class="line">                    ans += (i - st[<span class="number">0</span>] - <span class="number">1</span>) * height[st[<span class="number">0</span>]] - sum[i] + sum[st[<span class="number">0</span>]+<span class="number">1</span>];</span><br><span class="line">                &#125;</span><br><span class="line">                st[top++] = i;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> l,r;</span><br><span class="line">        <span class="keyword">while</span>(top&gt;<span class="number">1</span>)&#123;</span><br><span class="line">            r = st[top-<span class="number">1</span>];</span><br><span class="line">            l = st[top-<span class="number">2</span>];</span><br><span class="line">            ans += (r-l-<span class="number">1</span>)* height[r] - sum[r] + sum[l+<span class="number">1</span>];</span><br><span class="line">            --top;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<hr>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h3 id="Problem_3A"><a href="#Problem_3A" class="headerlink" title="Problem:"></a>Problem:</h3><p>The problem is detailed at <a href="https://leetcode.com/problems/trapping-rain-water/">leetcode</a>.</p>
+<p><img src="http://www.leetcode.com/wp-content/uploads/2012/08/rainwatertrap.png" alt="example_img"></p>
+<hr>
+<h3 id="Solutions_3A"><a href="#Solutions_3A" class="headerlink" title="Solutions:"></a>Solutions:</h3><p><strong>Time: O(n) |  Space: O(n)</strong></p>
+<p>The maximum volumn of water a slot can contain depends on the left border and the right border.<br>So we just need know the highest left border and right border of a slot, then we know how much water it can contain.<br>]]>
+    
+    </summary>
+    
+      <category term="O(n)" scheme="http://blog.etaf.me/tags/O-n/"/>
+    
+      <category term="Algorithm" scheme="http://blog.etaf.me/categories/Algorithm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[The Celebrity Problem]]></title>
+    <link href="http://blog.etaf.me/Algorithm/the-celebrity-problem/"/>
+    <id>http://blog.etaf.me/Algorithm/the-celebrity-problem/</id>
+    <published>2015-05-15T01:54:03.000Z</published>
+    <updated>2015-12-31T06:27:31.000Z</updated>
+    <content type="html"><![CDATA[<h3 id="Problem_3A"><a href="#Problem_3A" class="headerlink" title="Problem:"></a>Problem:</h3><blockquote>
+<p>In a party of n people, there is a celebrity who does’t know any one but every body know (s)he.<br>Given a NxN matrix, matrix[i][j] = {0,1}, 0 means the ith person does’n know the jth person.<br>Please find the celebrity.</p>
+</blockquote>
+<hr>
+<h3 id="Solutions_3A"><a href="#Solutions_3A" class="headerlink" title="Solutions:"></a>Solutions:</h3><p><strong>Time: O(n^2) |  Space: O(1)</strong></p>
+<p>Enumerates every person i, for any other person j, matrix[i][j] should be 0, and matrix[j][i] should be 1.</p>
+<hr>
+<p><strong>Time: O(n) | Space: O(n)</strong></p>
+<p>Given two person a, b, it’s easy to judge that one of them must not be the celebrity: if matrix[a][b] == 0, then b must not be a celebrity, vice versa.<br>So there must be n-1 times judge, each time eliminate one person.</p>
+<a id="more"></a>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find_celebrity</span><span class="params">(<span class="keyword">const</span> <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt;&amp; matrix)</span> <span class="comment">// Time: O(n), Space: O(m)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = matrix.size();</span><br><span class="line">    <span class="keyword">int</span> persons[n];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;n; ++i)&#123;</span><br><span class="line">        persons[i] = i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i+<span class="number">1</span>&lt;n)&#123;</span><br><span class="line">        <span class="keyword">if</span>(matrix[persons[i]][persons[i+<span class="number">1</span>]] == <span class="number">0</span>)&#123;</span><br><span class="line">            persons[i+<span class="number">1</span>] = persons[--n];</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            ++i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> candidate = persons[i];</span><br><span class="line">    n = matrix.size();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;n; ++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>( i != candidate &amp;&amp; (matrix[i][candidate] == <span class="number">0</span> || matrix[candidate][i] == <span class="number">1</span>)) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> candidate+<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt; matrix = &#123;</span><br><span class="line">                                    &#123;<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>&#125;,</span><br><span class="line">                                    &#123;<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>&#125;,</span><br><span class="line">                                    &#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>&#125;,</span><br><span class="line">                                    &#123;<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">0</span>&#125;,</span><br><span class="line">                                    &#123;<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>,<span class="number">1</span>&#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;find_celebrity(matrix)&lt;&lt;endl;</span><br><span class="line"><span class="comment">//    cout&lt;&lt;find_celebrity_2(matrix)&lt;&lt;endl;</span></span><br><span class="line"><span class="comment">//    cout&lt;&lt;find_celebrity_3(matrix)&lt;&lt;endl;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Time: O(n) | Space: O(1)</strong><br>Using tow pointer is easier.<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Two pointer. Time: O(n), Space: O(1)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// two pointer, one from front, the other from tail</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find_celebrity_2</span><span class="params">(<span class="keyword">const</span> <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt;&amp; matrix)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = matrix.size();</span><br><span class="line">    <span class="keyword">int</span> p = <span class="number">0</span>, q = n-<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(p&lt;q)&#123;</span><br><span class="line">        <span class="keyword">if</span>(matrix[p][q] == <span class="number">0</span>) --q;</span><br><span class="line">        <span class="keyword">else</span> ++p;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>( i!= p &amp;&amp; (matrix[i][p] == <span class="number">0</span> || matrix[p][i] == <span class="number">1</span>)) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> p+<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//two pointer, both from front.</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find_celebrity_3</span><span class="params">(<span class="keyword">const</span> <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &gt;&amp; matrix)</span></span>&#123;<span class="comment">// Two pointer. Time: O(n), Space: O(1)</span></span><br><span class="line">    <span class="keyword">int</span> n = matrix.size();</span><br><span class="line">    <span class="keyword">int</span> p = <span class="number">0</span>, q = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(q&lt;n)&#123;</span><br><span class="line">        <span class="keyword">if</span>(matrix[p][q] == <span class="number">1</span>) p = q;</span><br><span class="line">        ++q;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>( i!= p &amp;&amp; (matrix[i][p] == <span class="number">0</span> || matrix[p][i] == <span class="number">1</span>)) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> p+<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h3 id="Problem_3A"><a href="#Problem_3A" class="headerlink" title="Problem:"></a>Problem:</h3><blockquote>
+<p>In a party of n people, there is a celebrity who does’t know any one but every body know (s)he.<br>Given a NxN matrix, matrix[i][j] = {0,1}, 0 means the ith person does’n know the jth person.<br>Please find the celebrity.</p>
+</blockquote>
+<hr>
+<h3 id="Solutions_3A"><a href="#Solutions_3A" class="headerlink" title="Solutions:"></a>Solutions:</h3><p><strong>Time: O(n^2) |  Space: O(1)</strong></p>
+<p>Enumerates every person i, for any other person j, matrix[i][j] should be 0, and matrix[j][i] should be 1.</p>
+<hr>
+<p><strong>Time: O(n) | Space: O(n)</strong></p>
+<p>Given two person a, b, it’s easy to judge that one of them must not be the celebrity: if matrix[a][b] == 0, then b must not be a celebrity, vice versa.<br>So there must be n-1 times judge, each time eliminate one person.</p>]]>
+    
+    </summary>
+    
+      <category term="O(n)" scheme="http://blog.etaf.me/tags/O-n/"/>
+    
+      <category term="Algorithm" scheme="http://blog.etaf.me/categories/Algorithm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[MD5sum check in Dos]]></title>
+    <link href="http://blog.etaf.me/uncategorized/md5sum-check-in-dos/"/>
+    <id>http://blog.etaf.me/uncategorized/md5sum-check-in-dos/</id>
+    <published>2015-04-06T15:21:22.000Z</published>
+    <updated>2015-12-30T14:53:56.000Z</updated>
+    <content type="html"><![CDATA[<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certutil -hashfile yourfilename<span class="class">.ext</span> MD5</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certutil -hashfile yourfilename<span class="class">.ext</span> SHA1</span><br></pre></td></tr></table></figure>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certutil -hashfile yourfilename<span class="class">.ext</span> SHA256</span><br></pre></td></tr></table></figure>
+]]></content>
+    <summary type="html">
+    <![CDATA[<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span cl]]>
+    </summary>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[CentOS7 find boot for windows]]></title>
+    <link href="http://blog.etaf.me/System-Maintenance/centos7-find-boot-for-windows/"/>
+    <id>http://blog.etaf.me/System-Maintenance/centos7-find-boot-for-windows/</id>
+    <published>2015-03-28T01:11:02.000Z</published>
+    <updated>2015-12-30T14:53:56.000Z</updated>
+    <content type="html"><![CDATA[<p>CentOS 7 uses grub2 to manage the boot menue.<br>I’s much more convinement.<br>The command below  automatically finds system installed in disk, and add them to boot menue.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grub2-mkconfig -o /boot/grub2/grub.conf</span><br></pre></td></tr></table></figure></p>
+<p>However the Windows System on disk in NTFS format, which CentOS was unable to recognize.<br>To solve it, we should install ntfs-3g (a tool makes CentOS recognize NTFS)  first.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sodo install ntfs-<span class="number">3</span>g</span><br><span class="line">grub2-mkconfig -o /boot/grub2/grub.conf</span><br></pre></td></tr></table></figure></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>CentOS 7 uses grub2 to manage the boot menue.<br>I’s much more convinement.<br>The command below  automatically finds system installed in]]>
+    </summary>
+    
+      <category term="System-Maintenance" scheme="http://blog.etaf.me/categories/System-Maintenance/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Install NS2.35 in CentOS]]></title>
+    <link href="http://blog.etaf.me/Network/install-ns2-in-centos/"/>
+    <id>http://blog.etaf.me/Network/install-ns2-in-centos/</id>
+    <published>2015-03-28T00:53:41.000Z</published>
+    <updated>2015-12-30T14:53:56.000Z</updated>
+    <content type="html"><![CDATA[<p><strong>trick1: compile error</strong></p>
+<p>Solution: just modify the source code according to the error info</p>
+<hr>
+<p><strong>trick2: Could not find tk</strong></p>
+<p>Solution: set the env, the default instruction did not export the tk env,which I’ve add in the TCL_LIBRARY env.</p>
+<hr>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#install is easy, in ns2 directory:</span></span><br><span class="line">./install</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> PATH=”<span class="variable">$PATH</span>:home/etaf/software/ns-allinone-<span class="number">2.35</span>/bin:/home/etaf/software/ns-allinone-<span class="number">2.35</span>/tcl8.<span class="number">5.10</span>/unix:/home/etaf/software/ns-allinone-<span class="number">2.35</span>/tk8.<span class="number">5.10</span>/unix”</span><br><span class="line"><span class="built_in">export</span> LD_LIBRARY_PATH=”<span class="variable">$LD_LIBRARY_PATH</span>:/home/etaf/software/ns-allinone-<span class="number">2.35</span>/otcl-<span class="number">1.14</span>:/home/etaf/software/ns-allinone-<span class="number">2.35</span>/lib”</span><br><span class="line"><span class="built_in">export</span> TCL_LIBRARY=”/home/etaf/software/ns-allinone-<span class="number">2.35</span>/tcl8.<span class="number">5.10</span>/library:/home/etaf/software/ns-allinone-<span class="number">2.35</span>/tk8.<span class="number">5.10</span>/library”</span><br></pre></td></tr></table></figure>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p><strong>trick1: compile error</strong></p>
+<p>Solution: just modify the source code according to the error info</p>
+<hr>
+<p><strong>trick]]>
+    </summary>
+    
+      <category term="Network" scheme="http://blog.etaf.me/categories/Network/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Usage of linux cmd scp]]></title>
+    <link href="http://blog.etaf.me/Shell/usage-of-linux-cmd-scp/"/>
+    <id>http://blog.etaf.me/Shell/usage-of-linux-cmd-scp/</id>
+    <published>2015-03-28T00:34:22.000Z</published>
+    <updated>2015-12-31T06:30:39.000Z</updated>
+    <content type="html"><![CDATA[<h2 id="usage_of_scp"><a href="#usage_of_scp" class="headerlink" title="usage of scp"></a>usage of scp</h2><p>scp is a tool like cp in linux.The different is,scp copy file between PCs.</p>
+<h3 id="copy_a_file1_from_A_to_B_3A"><a href="#copy_a_file1_from_A_to_B_3A" class="headerlink" title="copy a file1 from A to B:"></a>copy a file1 from A to B:</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A~:  scp -<span class="tag">p</span> file1 username@B’s IP : ~/file1</span><br><span class="line">eg:</span><br><span class="line">scp -<span class="tag">p</span> test<span class="class">.txt</span> etaf@<span class="number">192.168</span>.<span class="number">1.10</span>:~/tset.txt</span><br></pre></td></tr></table></figure>
+<p>here -p measn to preserve the modify time ,access time,mode from original file.<br><a id="more"></a></p>
+<h3 id="copy_a_directory_from_A_to_B"><a href="#copy_a_directory_from_A_to_B" class="headerlink" title="copy a directory from A to B"></a>copy a directory from A to B</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A~:  scp -pr dir1 username@B’s IP : ~/dir1</span><br><span class="line">eg:</span><br><span class="line">scp -p test_dir etaf@<span class="number">192.168</span><span class="number">.1</span><span class="number">.10</span>:~/tset_dir</span><br></pre></td></tr></table></figure>
+<p>here -r means copy a directory</p>
+<p>other option see :<br><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">man</span> scp</span><br></pre></td></tr></table></figure></p>
+<h3 id="scp_without_password"><a href="#scp_without_password" class="headerlink" title="scp without password"></a>scp without password</h3><p>on the above step,each scp need you offer the password of the target PC.<br>Now there is a way to avoid the password step: by ssh certification.</p>
+<h4 id="A_-_26gt_3B_B_whithou_password"><a href="#A_-_26gt_3B_B_whithou_password" class="headerlink" title="A -&gt; B whithou password"></a>A -&gt; B whithou password</h4><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">in</span> <span class="constant">PC A:</span></span><br><span class="line">ssh-keygen -t rsa</span><br><span class="line">scp ~<span class="regexp">/.ssh/id</span>_rsa.pub etaf<span class="variable">@192</span>.<span class="number">169.1</span>.<span class="number">10</span><span class="symbol">:~/</span>.ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+<p>the same for B-&gt;A</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h2 id="usage_of_scp"><a href="#usage_of_scp" class="headerlink" title="usage of scp"></a>usage of scp</h2><p>scp is a tool like cp in linux.The different is,scp copy file between PCs.</p>
+<h3 id="copy_a_file1_from_A_to_B_3A"><a href="#copy_a_file1_from_A_to_B_3A" class="headerlink" title="copy a file1 from A to B:"></a>copy a file1 from A to B:</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A~:  scp -<span class="tag">p</span> file1 username@B’s IP : ~/file1</span><br><span class="line">eg:</span><br><span class="line">scp -<span class="tag">p</span> test<span class="class">.txt</span> etaf@<span class="number">192.168</span>.<span class="number">1.10</span>:~/tset.txt</span><br></pre></td></tr></table></figure>
+<p>here -p measn to preserve the modify time ,access time,mode from original file.<br>]]>
+    
+    </summary>
+    
+      <category term="Shell" scheme="http://blog.etaf.me/categories/Shell/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[shell cmd backup]]></title>
+    <link href="http://blog.etaf.me/Shell/shell-cmd-backup/"/>
+    <id>http://blog.etaf.me/Shell/shell-cmd-backup/</id>
+    <published>2015-03-27T15:04:29.000Z</published>
+    <updated>2015-12-31T06:31:05.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>To see etaf belongs to which group:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">groups etaf</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<a id="more"></a>
+<blockquote>
+<p>Change etaf’s default group to new_group:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usermod -g new_group etaf</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>add a group for etaf:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usermod <span class="operator">-a</span> -G new_group etaf</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>find all the core file and remove them<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find ~ -regex <span class="string">".*core\.[0-9]*"</span> | xargs rm</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>redirect  stderr to file<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd <span class="number">2</span>&gt; stderr.txt</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>redirect stdout and stderr to file<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cmd &gt;file <span class="number">2</span>&gt;&amp;<span class="number">1</span></span><br><span class="line"><span class="comment">##first redirect stderr to stdout , then redirect stdout to file</span></span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>vim replace<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:%s/origin_pattern/new_string/cig</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>kill multi process with one line<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> $(ps aux | grep <span class="string">'[p]ython csp_build.py'</span> | awk <span class="string">'&#123;print $2&#125;'</span>)</span><br><span class="line">Details on its workings are as follows:</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p><strong>first try kill -15 $(….)</strong><br><strong>if not help try kill -9</strong></p>
+<ul>
+<li>The ps gives you the list of all the processes.</li>
+<li>The grep filters that based on your search string, [p] is a trick to stop you picking up the actual grep process itself.</li>
+<li>The awk just gives you the second field of each line, which is the PID.</li>
+<li>The $(x) construct means to execute x then take its output and put it on the command line. The output of that ps pipeline inside that construct above is the list of process IDs so you end up with a command like kill 1234 1122 7654.</li>
+</ul>
+<hr>
+<blockquote>
+<p>run command without shell<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup <span class="built_in">command</span> &amp;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>format code<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">indent -linux x.cpp</span><br><span class="line">or:</span><br><span class="line">clang-format -i -style=xxx *.cpp</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>arp scan<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo arp-scan -I eth0 <span class="operator">-l</span></span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>find excutabe file<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find -type f -perm /u=x -exec ls <span class="operator">-l</span> &#123;&#125; \;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>find ip of a ASUS server which has open port 80;<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo arp-scan <span class="operator">-l</span> | grep ASUS | awk <span class="string">'&#123;print $1&#125;'</span> | xargs nmap -p <span class="number">80</span> | grep -A <span class="number">1</span> -B <span class="number">3</span> <span class="string">"open"</span></span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>use tail to monitor a file<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail <span class="operator">-f</span> &lt;file&gt;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>make a port(for example 80) pass firewall on centos7<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-cmd --zone=public --add-port=<span class="number">80</span>/tcp --permanent</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>what does up time same?<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">uptime</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>output:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">current time</th>
+<th style="text-align:left">up duration</th>
+<th style="text-align:left">user connections</th>
+<th style="text-align:left">load average:</th>
+<th style="text-align:left">last 1 min</th>
+<th style="text-align:left">last 5 min</th>
+<th style="text-align:left">last 15 min</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">23:22:03</td>
+<td style="text-align:left">up 6 days, 14:44,</td>
+<td style="text-align:left">1 user,</td>
+<td style="text-align:left">load average:</td>
+<td style="text-align:left">0.00,</td>
+<td style="text-align:left">0.01,</td>
+<td style="text-align:left">0.05</td>
+</tr>
+</tbody>
+</table>
+<p>load: means the length of queue waiting for CPU plus the number of running process.</p>
+<p>$$<br>load(t) = load(t-1) e^(-5/60) + n (1 - e^(-5/60))<br>$$<br>here n means the sum of number of running and waiting process.</p>
+<hr>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>To see etaf belongs to which group:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">groups etaf</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>]]>
+    
+    </summary>
+    
+      <category term="Shell" scheme="http://blog.etaf.me/categories/Shell/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[git cmd backup]]></title>
+    <link href="http://blog.etaf.me/Git/git-cmd-backup/"/>
+    <id>http://blog.etaf.me/Git/git-cmd-backup/</id>
+    <published>2015-03-27T14:25:12.000Z</published>
+    <updated>2015-12-31T03:28:40.000Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<p>push local code to new created repo<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br><span class="line">vim .gitignore</span><br><span class="line">git add -A</span><br><span class="line">git commit -m <span class="string">"init"</span></span><br><span class="line">git remote add origin https://etaf@github.... </span><br><span class="line">git push origin master</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>remote file from git repo<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git rm file</span><br><span class="line">git rm -r dir</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>added but not commit, rm file added:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rm --cached file</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>force replace local code with server code:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard</span><br><span class="line">git pull origin master</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>cheate a new branch and switch to it:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b branch-name</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>push local branch to remote server:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin branch-name</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>fetch remote branch from remote server:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git fetch origin</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>replace local branch with server branch:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard HEAD~<span class="number">3</span>         <span class="comment"># HEAD~3 means rollback 3 commit versions</span></span><br><span class="line">git pull</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>if you make a mistake when using: git reset –hard <sha> , then the commits before it would lose(see git log), how to recover them ?<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git reflog</span><br><span class="line">git reset --hard  &lt;sha&gt;</span><br></pre></td></tr></table></figure></sha></p>
+</blockquote>
+<hr>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<p>push local code to new created repo<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">]]>
+    </summary>
+    
+      <category term="Git" scheme="http://blog.etaf.me/categories/Git/"/>
+    
+  </entry>
+  
+</feed>
