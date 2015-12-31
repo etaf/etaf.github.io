@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title><![CDATA[ETAF's Blog]]></title>
-  
+  <subtitle><![CDATA[where there's a will there's a way]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://blog.etaf.me/"/>
   <updated>2015-12-31T06:30:18.000Z</updated>
