@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>ETAF&#39;s Blog</title>
+  
+  <subtitle>where there&#39;s a will there&#39;s a way</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="blog.elisn.tech/"/>
+  <updated>2019-02-27T03:47:42.543Z</updated>
+  <id>blog.elisn.tech/</id>
+  
+  <author>
+    <name>ETAF</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Algorithm 1: Find max interval</title>
+    <link href="blog.elisn.tech/Algorithm/Algorithm-1-Find-max-interval/"/>
+    <id>blog.elisn.tech/Algorithm/Algorithm-1-Find-max-interval/</id>
+    <published>2019-02-27T03:40:24.000Z</published>
+    <updated>2019-02-27T03:47:42.543Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Problem"><a href="#Problem" class="headerlink" title="Problem:"></a>Problem:</h2><p>Given an array a, you need to find maximum j - i that a[i] &lt; a[j].</p><h2 id="Solutions"><a href="#Solutions" class="headerlink" title="Solutions:"></a>Solutions:</h2><h3 id="Naive"><a href="#Naive" class="headerlink" title="Naive"></a>Naive</h3><p>For each pointer r from end to start, find the target pointer l. Update the max interval during the process.<br><strong>Time</strong>: O(n^2) | <strong>Space</strong>: O(1)</p><h3 id="Better"><a href="#Better" class="headerlink" title="Better:"></a>Better:</h3><ul><li>step 1: Create an array p, p[i] means the minum between a[0, i]</li><li>step 2: Enumerate the answer <em>interval</em> from 0; First find the max interval end with end of a (a[r], r = n-1，l = r - curent_interval -1). Then try to find the greater interval by moving r and l to left.</li></ul><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find_max_interval</span><span class="params">(<span class="keyword">const</span> <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; a)</span></span>&#123;</span><br><span class="line"><span class="keyword">int</span> n = a.size();</span><br><span class="line"><span class="keyword">int</span> interval = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> p[n];</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;n; ++i)&#123;<span class="comment">// p[i] means the minimum element in pre i elements.</span></span><br><span class="line">p[i] = (i==<span class="number">0</span> || a[i] &lt; p[i<span class="number">-1</span>]) ? a[i] : p[i<span class="number">-1</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> j=n<span class="number">-1</span>; j&gt;interval; --j)&#123;</span><br><span class="line"><span class="keyword">while</span>(j&gt;interval &amp;&amp; a[j] &gt;= p[j-interval<span class="number">-1</span>])</span><br><span class="line">++interval;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> interval;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;Problem&quot;&gt;&lt;a href=&quot;#Problem&quot; class=&quot;headerlink&quot; title=&quot;Problem:&quot;&gt;&lt;/a&gt;Problem:&lt;/h2&gt;&lt;p&gt;Given an array a, you need to find maximum j - i
+      
+    
+    </summary>
+    
+      <category term="Algorithm" scheme="blog.elisn.tech/categories/Algorithm/"/>
+    
+    
+      <category term="enumerate answer" scheme="blog.elisn.tech/tags/enumerate-answer/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="blog.elisn.tech/uncategorized/hello-world/"/>
+    <id>blog.elisn.tech/uncategorized/hello-world/</id>
+    <published>2019-02-27T03:38:08.847Z</published>
+    <updated>2019-02-27T03:38:08.847Z</updated>
+    
+    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
+      
+    
+    </summary>
+    
+    
+  </entry>
+  
+</feed>
